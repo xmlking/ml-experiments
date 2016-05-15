@@ -1,0 +1,3 @@
+rootProject.name = 'ml-experiments'
+include 'kafka-connect-twitter',
+    'kafka-streams-twitter-nlp'

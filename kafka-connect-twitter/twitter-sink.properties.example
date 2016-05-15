@@ -1,0 +1,8 @@
+name=twitter-sink
+connector.class=com.sumo.experiments.kafka.connect.twitter.TwitterSinkConnector
+tasks.max=1
+topics=texts-to-tweet
+twitter.consumerkey=(secret)
+twitter.consumersecret=(secret)
+twitter.token=(secret)
+twitter.secret=(secret)
