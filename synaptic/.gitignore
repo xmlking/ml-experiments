@@ -4,6 +4,7 @@
 logs
 *.log
 npm-debug.log*
+NOTES.md
 
 # Runtime data
 pids

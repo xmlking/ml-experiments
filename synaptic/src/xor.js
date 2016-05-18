@@ -1,5 +1,5 @@
-import Perceptron from './perceptron';
 import { Trainer } from 'synaptic';
+import Perceptron from './utils/perceptron';
 
 let myPerceptron = new Perceptron(2,20,1);
 myPerceptron.connectLayers();

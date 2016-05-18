@@ -1,6 +1,6 @@
 import mnist from 'mnist';
 import { Layer, Network, Trainer } from 'synaptic';
-import Perceptron from './perceptron';
+import Perceptron from './utils/perceptron';
 
 const set = mnist.set(700, 20);
 const trainingSet = set.training;
@@ -21,3 +21,4 @@ trainer.train(trainingSet, {
 
 console.log(myPerceptron.activate(testSet[0].input));
 console.log(testSet[0].output);
+console.log("done")

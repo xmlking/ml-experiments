@@ -37,7 +37,7 @@ $KAFKA_HOME/bin/kafka-server-start.sh ./server.properties
 #### To Start Schema Registry
 ```bash
 # Start Schema Registry and expose port 8081 for use by the host machine
-#  docker run -d --name schema-registry -p 8081:8081 -e SR_KAFKASTORE_CONNECTION_URL=sumo-host:2181 confluent/schema-registry
+# docker run -d --rm --name schema-registry -p 8081:8081 -e SR_KAFKASTORE_CONNECTION_URL=192.168.1.88:2181 confluent/schema-registry
 /Developer/Applications/confluent-2.1.0-alpha1/bin/schema-registry-start ./schema-registry.properties
 ```
 
