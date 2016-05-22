@@ -1,0 +1,26 @@
+{
+  "name": "Neural-Networks",
+  "version": "1.0.0",
+  "description": "Neural Networks Demo",
+  "main": "index.js",
+  "scripts": {
+    "start0": "babel-node index.js",
+    "start": "babel-node src/xor.js",
+    "start1": "babel-node src/mnist.js",
+    "start2": "babel-node src/sum.js"
+  },
+  "keywords": [
+    "Neural",
+    "Networks"
+  ],
+  "author": "Sumanth Chinthagunta",
+  "license": "MIT",
+  "dependencies": {
+    "mnist": "^1.0.2",
+    "synaptic": "^1.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015-node6": "^0.2.0"
+  }
+}

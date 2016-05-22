@@ -1,0 +1,32 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+    maven {
+        name 'jboss'
+        url 'http://repository.jboss.org/nexus/content/groups/public-jboss'
+    }
+}
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    compile "ch.qos.logback:logback-classic:$logbackVersion"
+    compile "org.optaplanner:optaplanner-core:$optaplannerVersion"
+    compile "org.optaplanner:optaplanner-persistence-common:$optaplannerVersion"
+    compile "org.optaplanner:optaplanner-persistence-xstream:$optaplannerVersion"
+    compile "org.optaplanner:optaplanner-benchmark:$optaplannerVersion"
+    compile "org.drools:drools-decisiontables:$droolsVersion"
+    compile "org.apache.commons:commons-lang3:3.4"
+    compile "com.thoughtworks.xstream:xstream"
+    compile "org.jfree:jcommon"
+    compile "org.jfree:jfreechart"
+    compile "org.jdom:jdom:2.0.2"
+
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+}
+
+//mainClassName = "com.sumo.experiments.kafka.streams.twitter.TwitterStreamsAnalyzer"

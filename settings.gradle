@@ -1,3 +1,4 @@
 rootProject.name = 'ml-experiments'
 include 'kafka-connect-twitter',
-    'kafka-streams-twitter-nlp'
+    'kafka-streams-twitter-nlp',
+    'constraint-programming'
