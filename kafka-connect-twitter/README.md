@@ -10,8 +10,8 @@ A Kafka Connect for Twitter. Both a source (from Twitter to Kafka) and sink (fro
 
 build the fatJar:
 ```bash
-gradle shadowJar
-# copy to $KAFKA_HOME/share/java/ ?
+gradle kafka-connect-twitter:shadowJar
+# copy to $CONFLUENT_HOME/share/java/ ?
 ```
 
 ### Run
@@ -20,8 +20,7 @@ gradle shadowJar
 
 ```bash
 cd kafka-connect-twitter
-export KAFKA_HOME=/Developer/Applications/confluent-2.1.0-alpha1
-# export KAFKA_HOME=/Developer/Applications/kafka_2.11-0.10.1.0-SNAPSHOT
+export CONFLUENT_HOME=/Developer/Applications/confluent-3.0.0
 export CLASSPATH=`pwd`/build/libs/kafka-connect-twitter-0.1.0-SNAPSHOT-all.jar
 ```
 
@@ -33,13 +32,13 @@ export CLASSPATH=`pwd`/build/libs/kafka-connect-twitter-0.1.0-SNAPSHOT-all.jar
 
 ```bash
 cd kafka-connect-twitter
-$KAFKA_HOME/bin/connect-standalone connect-source-standalone.properties twitter-source.properties
+$CONFLUENT_HOME/bin/connect-standalone connect-source-standalone.properties twitter-source.properties
 ```
 
 *Watch Avro TwitterStatus tweets come in represented as JSON*
 
 ```bash
-$KAFKA_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
         --topic twitter \
         --property print.key=true \
         --property schema.registry.url=http://localhost:8081
@@ -48,13 +47,13 @@ $KAFKA_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
 *Simple (plain strings) output mode*
 
 ```bash
-$KAFKA_HOME/bin/connect-standalone connect-simple-source-standalone.properties twitter-source.properties
+$CONFLUENT_HOME/bin/connect-standalone connect-simple-source-standalone.properties twitter-source.properties
 ```
 
 *And watch tweets come in, with the key the user, and the value the tweet text*
 
 ```bash
-$KAFKA_HOME/bin/kafka-console-consumer --zookeeper localhost:2181 \
+$CONFLUENT_HOME/bin/kafka-console-consumer --zookeeper localhost:2181 \
       --topic twitter \
       --formatter kafka.tools.DefaultMessageFormatter \
       --property print.key=true \
