@@ -1,15 +1,18 @@
-apply plugin: 'idea'
+plugins {
+    id "idea"
+}
 
 group "com.sumo.experiments"
 
-
 subprojects {
+    apply plugin: 'java'
     repositories {
         mavenCentral()
     }
+    dependencies {
+        compile "ch.qos.logback:logback-classic:$logbackVersion"
+    }
 }
-
-
 
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion

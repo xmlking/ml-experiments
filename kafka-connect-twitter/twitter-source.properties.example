@@ -2,17 +2,18 @@ name=twitter-source
 connector.class=com.sumo.experiments.kafka.connect.twitter.TwitterSourceConnector
 tasks.max=1
 topic=twitter
-twitter.consumerkey=(secret)
-twitter.consumersecret=(secret)
-twitter.token=(secret)
-twitter.secret=(secret)
-# track.terms=news,music,hadoop,clojure,scala,fp,golang,python,fsharp,cpp,java
+twitter.consumerkey=
+twitter.consumersecret=
+twitter.token=
+twitter.secret=
+
 # set output.format to string to output string key/values, it defaults to structured
 # output.format=string
 # language=en,ru,de
 # stream.type=sample
 # stream.type=filter
+# track.terms=news,music,hadoop,clojure,scala,fp,golang,python,fsharp,cpp,java
 # San Francisco OR New York City
-#track.locations=-122.75,36.8,-121.75,37.8,-74,40,-73,41
+# track.locations=-122.75,36.8,-121.75,37.8,-74,40,-73,41
 # bbcbreaking,bbcnews,justinbieber
 # track.follow=5402612,612473,27260086

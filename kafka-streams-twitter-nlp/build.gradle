@@ -1,5 +1,8 @@
-apply plugin: 'groovy'
-apply plugin: 'application'
+plugins {
+    id "groovy"
+    id "application"
+    id "com.github.johnrengelman.shadow" version "1.2.3"
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -17,7 +20,6 @@ repositories {
 
 dependencies {
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
-    compile "ch.qos.logback:logback-classic:$logbackVersion"
     compile "de.julielab:aliasi-lingpipe:4.1.0"
     compile "org.apache.kafka:kafka-clients:$kafkaVersion"
     compile ("org.apache.kafka:kafka-streams:$kafkaVersion") {

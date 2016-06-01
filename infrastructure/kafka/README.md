@@ -15,20 +15,27 @@ cd infrastructure/kafka
 export CONFLUENT_HOME=/Developer/Applications/confluent-3.0.0
 ```
 
-#### To Start Zookeeper
+#### Start Zookeeper
 ```bash
 $CONFLUENT_HOME/bin/zookeeper-server-start ./zookeeper.properties
 ```
 
-#### To Start Kafka
+#### Start Kafka
 ```bash
 $CONFLUENT_HOME/bin/kafka-server-start ./server.properties
 ```
 
-#### To Start Schema Registry
+#### Start Schema Registry
 ```bash
 $CONFLUENT_HOME/bin/schema-registry-start ./schema-registry.properties
 ```
+
+#### Start Control Center
+```bash
+# http://localhost:9021/
+$CONFLUENT_HOME/bin/control-center-start ./controlcenter.properties
+```
+
 
 #### Create Kafka Topic and partitioning (one time)
 ```bash
