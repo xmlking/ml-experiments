@@ -42,6 +42,18 @@ $CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
         --topic twitter \
         --property print.key=true \
         --property schema.registry.url=http://localhost:8081
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+        --topic french \
+        --property print.key=true \
+        --property schema.registry.url=http://localhost:8081
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+        --topic spanish \
+        --property print.key=true \
+        --property schema.registry.url=http://localhost:8081
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+        --topic german \
+        --property print.key=true \
+        --property schema.registry.url=http://localhost:8081
 ```
 
 *Simple (plain strings) output mode*

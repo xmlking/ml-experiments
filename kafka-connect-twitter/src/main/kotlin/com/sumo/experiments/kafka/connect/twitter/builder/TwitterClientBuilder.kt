@@ -1,5 +1,7 @@
-package com.sumo.experiments.kafka.connect.twitter
+package com.sumo.experiments.kafka.connect.twitter.builder
 
+import com.sumo.experiments.kafka.connect.twitter.batch
+import com.sumo.experiments.kafka.connect.twitter.config.TwitterSourceConfig
 import com.twitter.hbc.ClientBuilder
 import com.twitter.hbc.core.Constants
 import com.twitter.hbc.core.endpoint.Location
@@ -9,14 +11,16 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor
 import com.twitter.hbc.httpclient.BasicClient
 import com.twitter.hbc.httpclient.auth.OAuth1
 import org.apache.kafka.connect.source.SourceTaskContext
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory.getLogger
 import java.util.concurrent.BlockingQueue
 
-object TwitterReader {
+object TwitterClientBuilder {
 
-    private val log = LoggerFactory.getLogger(TwitterReader::class.java)
+    private val log = getLogger(TwitterClientBuilder::class.java)
 
     fun getTwitterClient(config: TwitterSourceConfig, context: SourceTaskContext, rawQueue: BlockingQueue<String>) : BasicClient {
+
+        log.debug("offset: "+context.offsetStorageReader().offset(mapOf("lang" to "en")))
 
         //endpoints //DefaultStreamingEndpoint
         val endpoint = if (config.getString(TwitterSourceConfig.STREAM_TYPE) == TwitterSourceConfig.STREAM_TYPE_SAMPLE) {
@@ -49,10 +53,10 @@ object TwitterReader {
         }
 
         //twitter auth stuff
-        val auth = OAuth1(config.getString(TwitterSourceConfig.CONSUMER_KEY_CONFIG),
-            config.getPassword(TwitterSourceConfig.CONSUMER_SECRET_CONFIG).value(),
-            config.getString(TwitterSourceConfig.TOKEN_CONFIG),
-            config.getPassword(TwitterSourceConfig.SECRET_CONFIG).value())
+        val auth = OAuth1(config.getString(TwitterSourceConfig.Companion.CONSUMER_KEY_CONFIG),
+            config.getPassword(TwitterSourceConfig.Companion.CONSUMER_SECRET_CONFIG).value(),
+            config.getString(TwitterSourceConfig.Companion.TOKEN_CONFIG),
+            config.getPassword(TwitterSourceConfig.Companion.SECRET_CONFIG).value())
 
         //build basic client
         return ClientBuilder()

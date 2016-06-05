@@ -1,5 +1,5 @@
 import com.nhaarman.mockito_kotlin.mock
-import com.sumo.experiments.kafka.connect.twitter.TwitterSourceConfig
+import com.sumo.experiments.kafka.connect.twitter.config.TwitterSourceConfig
 import com.sumo.experiments.kafka.connect.twitter.TwitterSourceConnector
 import com.sumo.experiments.kafka.connect.twitter.TwitterSourceTask
 import org.apache.kafka.connect.connector.ConnectorContext

@@ -19,7 +19,16 @@ dependencies {
     compile "org.apache.kafka:connect-api:$kafkaVersion"
     compile "com.twitter:hbc-twitter4j:$hosebirdVersion"
 
-    //testCompile "org.mockito:mockito-all:$mockitoVersion"
     testCompile "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
     testCompile "org.jetbrains.spek:spek:$spekVersion"
+}
+
+
+jar {
+    manifest {
+        attributes(
+            "Implementation-Version": version,
+            'Build-Time': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        )
+    }
 }

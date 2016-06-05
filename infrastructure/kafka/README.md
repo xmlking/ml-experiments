@@ -58,5 +58,12 @@ $CONFLUENT_HOME/bin/kafka-console-consumer --topic french --zookeeper localhost:
 $CONFLUENT_HOME/bin/kafka-console-consumer --topic spanish --zookeeper localhost:2181
 ```
 
+#### Purge Kafka Topic
+```bash
+# Temporarily update the retention time on the topic to one second:
+$CONFLUENT_HOME/bin/kafka-topics --zookeeper localhost:2181 --alter --topic twitter --config retention.ms=1000
+# Then set it back to default
+$CONFLUENT_HOME/bin/kafka-topics --zookeeper localhost:2181 --alter --topic twitter --config retention.ms=600000
+```
 
 *NOTE: stop Kafka first and then Zookeeper*

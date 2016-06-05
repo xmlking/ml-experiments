@@ -1,14 +1,16 @@
 package com.sumo.experiments.kafka.connect.twitter
 
-import com.sumo.experiments.kafka.connect.twitter.domain.TwitterStatus
-import com.sumo.experiments.kafka.connect.twitter.domain.TwitterUser
+import com.sumo.experiments.kafka.connect.twitter.builder.TwitterClientBuilder
+import com.sumo.experiments.kafka.connect.twitter.config.TwitterSourceConfig
+import com.sumo.experiments.kafka.connect.twitter.models.TwitterStatus
+import com.sumo.experiments.kafka.connect.twitter.models.TwitterUser
 import com.twitter.hbc.httpclient.BasicClient
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient
 import org.apache.kafka.common.utils.AppInfoParser
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory.getLogger
 import twitter4j.StallWarning
 import twitter4j.Status
 import twitter4j.StatusDeletionNotice
@@ -16,12 +18,13 @@ import twitter4j.StatusListener
 import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
-
+import java.util.jar.Manifest
 
 class TwitterSourceTask : SourceTask() {
 
     private lateinit var sourceConfig: TwitterSourceConfig
-    private lateinit var twitterBasicClient: BasicClient
+    private lateinit var  twitterStatusClient: Twitter4jStatusClient
+
     //batch size to take from the queue
     private var batchSize = TwitterSourceConfig.BATCH_SIZE_DEFAULT
     private var batchTimeout = TwitterSourceConfig.BATCH_TIMEOUT_DEFAULT
@@ -32,14 +35,15 @@ class TwitterSourceTask : SourceTask() {
     private var statusConverter = TwitterSourceConfig.OUTPUT_FORMAT_DEFAULT
 
     companion private object {
-        val log = LoggerFactory.getLogger(TwitterSourceTask::class.java)
-        val TWEET_SOURCE = "tweetSource";
+        val log = getLogger(TwitterSourceTask::class.java)
+        val TRACK_TERMS = "track.terms";
         val TWEET_LANG = "lang";
         val TWEET_ID = "tweetId";
 
         fun statusToStringKeyValue(status: Status, topic: String): SourceRecord {
             return SourceRecord(
-                mapOf(TWEET_SOURCE to status.source, TWEET_LANG to status.lang), //source partitions?
+                //TODO mapOf(TRACK_TERMS to sourceConfig.getString(TwitterSourceConfig.TRACK_TERMS)), //source partitions?
+                mapOf(TWEET_LANG to status.lang), //source partitions?
                 mapOf(TWEET_ID to status.id), //source offsets?
                 topic,
                 null,
@@ -53,7 +57,7 @@ class TwitterSourceTask : SourceTask() {
         fun statusToTwitterStatusStructure(status: Status, topic: String): SourceRecord {
             val ts = TwitterStatus(status)
             return SourceRecord(
-                mapOf(TWEET_SOURCE to status.source, TWEET_LANG to status.lang), //source partitions?
+                mapOf(TWEET_LANG to status.lang), //source partitions?
                 mapOf(TWEET_ID to status.id), //source offsets?
                 topic,
                 null,
@@ -65,18 +69,19 @@ class TwitterSourceTask : SourceTask() {
         }
     }
 
-    override fun version(): String = AppInfoParser.getVersion()
+    override fun version(): String = TwitterSourceTask::class.java.`package`.implementationVersion
 
     override fun start(props: Map<String, String>) {
+
         sourceConfig = TwitterSourceConfig(props)
         batchSize = sourceConfig.getInt(TwitterSourceConfig.BATCH_SIZE)
         batchTimeout = sourceConfig.getDouble(TwitterSourceConfig.BATCH_TIMEOUT)
         topic = sourceConfig.getString(TwitterSourceConfig.TOPIC)
         statusConverter = sourceConfig.getString(TwitterSourceConfig.OUTPUT_FORMAT)
 
-        twitterBasicClient = TwitterReader.getTwitterClient(sourceConfig, context, rawQueue)
+        val twitterBasicClient = TwitterClientBuilder.getTwitterClient(sourceConfig, context, rawQueue)
 
-        val twitterStatusClient = Twitter4jStatusClient(
+        twitterStatusClient = Twitter4jStatusClient(
             twitterBasicClient,
             rawQueue,
             listOf(object : StatusListener {
@@ -122,24 +127,24 @@ class TwitterSourceTask : SourceTask() {
         log.info("Stopping Twitter client")
         // Print some stats
         log.info("""Twitter Client Stats:
-        numMessages: ${twitterBasicClient.statsTracker.numMessages}
-        numMessagesDropped: ${twitterBasicClient.statsTracker.numMessagesDropped}
-        num200s: ${twitterBasicClient.statsTracker.num200s}
-        num400s: ${twitterBasicClient.statsTracker.num400s}
-        num500s: ${twitterBasicClient.statsTracker.num500s}
-        numClientEventsDropped: ${twitterBasicClient.statsTracker.numClientEventsDropped}
-        numConnectionFailures: ${twitterBasicClient.statsTracker.numConnectionFailures}
-        numConnects: ${twitterBasicClient.statsTracker.numConnects}
-        numDisconnects: ${twitterBasicClient.statsTracker.numDisconnects}
+        numMessages: ${twitterStatusClient.statsTracker.numMessages}
+        numMessagesDropped: ${twitterStatusClient.statsTracker.numMessagesDropped}
+        num200s: ${twitterStatusClient.statsTracker.num200s}
+        num400s: ${twitterStatusClient.statsTracker.num400s}
+        num500s: ${twitterStatusClient.statsTracker.num500s}
+        numClientEventsDropped: ${twitterStatusClient.statsTracker.numClientEventsDropped}
+        numConnectionFailures: ${twitterStatusClient.statsTracker.numConnectionFailures}
+        numConnects: ${twitterStatusClient.statsTracker.numConnects}
+        numDisconnects: ${twitterStatusClient.statsTracker.numDisconnects}
                     """)
-        twitterBasicClient.stop()
+        twitterStatusClient.stop()
         rawQueue.clear();
         statusQueue.clear();
     }
 
     override fun poll(): List<SourceRecord> {
-        if (twitterBasicClient.isDone)
-            log.warn("Client connection closed unexpectedly: ", twitterBasicClient.exitEvent.message) //TODO: what next?
+        if (twitterStatusClient.isDone)
+            log.warn("Client connection closed unexpectedly: ") //twitterBasicClient.exitEvent.message TODO: what next?
         val l = mutableListOf<Status>()
         statusQueue.drainWithTimeoutTo(l, batchSize, (batchTimeout * 1E9).toLong(), TimeUnit.NANOSECONDS)
         return l.map({
@@ -151,5 +156,3 @@ class TwitterSourceTask : SourceTask() {
     }
 
 }
-
-

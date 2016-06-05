@@ -1,15 +1,15 @@
-package com.sumo.experiments.kafka.connect.twitter
+package com.sumo.experiments.kafka.connect.twitter.config
 
 import org.apache.kafka.common.config.ConfigDef.Importance
 import org.apache.kafka.common.config.ConfigDef.Type
 import org.apache.kafka.common.config.AbstractConfig
 import org.apache.kafka.common.config.ConfigDef
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory.getLogger
 
 
-class TwitterSourceConfig(props: Map<String, String>) : AbstractConfig(TwitterSourceConfig.config, props) {
+class TwitterSourceConfig(props: Map<String, String>) : AbstractConfig(config, props) {
     companion object {
-        private val log = LoggerFactory.getLogger(TwitterSourceConfig::class.java)
+        private val log = getLogger(TwitterSourceConfig::class.java)
 
         val CONSUMER_KEY_CONFIG = "twitter.consumerkey"
         val CONSUMER_KEY_CONFIG_DOC = "Twitter account consumer key."
@@ -47,7 +47,7 @@ class TwitterSourceConfig(props: Map<String, String>) : AbstractConfig(TwitterSo
         val OUTPUT_FORMAT = "output.format"
         val OUTPUT_FORMAT_ENUM_STRUCTURED = "structured"
         val OUTPUT_FORMAT_ENUM_STRING = "string"
-        val OUTPUT_FORMAT_DOC = "How the output is formatted, can be either $OUTPUT_FORMAT_ENUM_STRING for (key=username:string, value=text:string), or $OUTPUT_FORMAT_ENUM_STRUCTURED for value=structure:TwitterStatus."
+        val OUTPUT_FORMAT_DOC = "How the output is formatted, can be either ${OUTPUT_FORMAT_ENUM_STRING} for (key=username:string, value=text:string), or ${OUTPUT_FORMAT_ENUM_STRUCTURED} for value=structure:TwitterStatus."
         val OUTPUT_FORMAT_DEFAULT = "structured"
         val EMPTY_VALUE = ""
 
@@ -69,40 +69,40 @@ class TwitterSourceConfig(props: Map<String, String>) : AbstractConfig(TwitterSo
     }
 
     init {
-        when (getString(TwitterSourceConfig.STREAM_TYPE)) {
+        when (getString(STREAM_TYPE)) {
 
-            TwitterSourceConfig.STREAM_TYPE_SAMPLE -> {
+            STREAM_TYPE_SAMPLE -> {
             }
 
-            TwitterSourceConfig.STREAM_TYPE_FILTER -> {
-                val terms = getList(TwitterSourceConfig.TRACK_TERMS)
-                val locations = getList(TwitterSourceConfig.TRACK_LOCATIONS)
-                val users = getList(TwitterSourceConfig.TRACK_FOLLOW)
-                val language = getList(TwitterSourceConfig.LANGUAGE)
+            STREAM_TYPE_FILTER -> {
+                val terms = getList(TRACK_TERMS)
+                val locations = getList(TRACK_LOCATIONS)
+                val users = getList(TRACK_FOLLOW)
+                val language = getList(LANGUAGE)
                 if (terms.isEmpty() && locations.isEmpty() && users.isEmpty()) {
-                    throw RuntimeException("At least one of the parameters ${TwitterSourceConfig.TRACK_TERMS}, ${TwitterSourceConfig.TRACK_LOCATIONS}, ${TwitterSourceConfig.TRACK_FOLLOW} should be specified!")
+                    throw RuntimeException("At least one of the parameters ${TRACK_TERMS}, ${TRACK_LOCATIONS}, ${TRACK_FOLLOW} should be specified!")
                 }
                 if (!locations.isEmpty()) {
                     if ((locations.size % 4) != 0) {
-                        log.error("${TwitterSourceConfig.TRACK_LOCATIONS} should have number of elements divisible by 4!")
-                        throw RuntimeException("${TwitterSourceConfig.TRACK_LOCATIONS} should have number of elements divisible by 4!")
+                        log.error("${TRACK_LOCATIONS} should have number of elements divisible by 4!")
+                        throw RuntimeException("${TRACK_LOCATIONS} should have number of elements divisible by 4!")
                     }
                     try {
                         locations.map { x -> x.trim().toDouble() }
                     } catch (e: NumberFormatException) {
-                        log.error("You should use double numbers in ${TwitterSourceConfig.TRACK_LOCATIONS}")
-                        throw RuntimeException("You should use double numbers in ${TwitterSourceConfig.TRACK_LOCATIONS}")
+                        log.error("You should use double numbers in ${TRACK_LOCATIONS}")
+                        throw RuntimeException("You should use double numbers in ${TRACK_LOCATIONS}")
                     }
                 }
                 try {
                     users.map { x -> x.trim().toLong() }
                 } catch (e: NumberFormatException) {
-                    log.error("You should use numeric user IDs in ${TwitterSourceConfig.TRACK_FOLLOW}")
-                    throw RuntimeException("You should use numeric user IDs in ${TwitterSourceConfig.TRACK_FOLLOW}")
+                    log.error("You should use numeric user IDs in ${TRACK_FOLLOW}")
+                    throw RuntimeException("You should use numeric user IDs in ${TRACK_FOLLOW}")
                 }
             }
 
-            else -> throw RuntimeException("Unknown value for ${TwitterSourceConfig.STREAM_TYPE} parameter")
+            else -> throw RuntimeException("Unknown value for ${STREAM_TYPE} parameter")
         }
     }
 }

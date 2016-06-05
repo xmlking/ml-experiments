@@ -1,4 +1,4 @@
-package com.sumo.experiments.kafka.connect.twitter.domain
+package com.sumo.experiments.kafka.connect.twitter.models
 
 import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.SchemaBuilder
@@ -11,7 +11,7 @@ class TwitterUser(user: User) : Struct(TwitterUser.SCHEMA) {
 
     companion object {
 
-        val SCHEMA = SchemaBuilder.struct().name("com.sumo.experiments.kafka.connect.twitter.domain.TwitterUser").version(1)
+        val SCHEMA = SchemaBuilder.struct().name(TwitterUser::class.java.name).version(1)
             .field("id", Schema.INT64_SCHEMA)
             .field("name", Schema.STRING_SCHEMA)
             .field("screenName", Schema.STRING_SCHEMA)
@@ -34,7 +34,7 @@ class TwitterStatus(status: Status) : Struct(TwitterStatus.SCHEMA) {
 
     companion object {
 
-        val SCHEMA = SchemaBuilder.struct().name("com.sumo.experiments.kafka.connect.twitter.domain.TwitterStatus").version(1)
+        val SCHEMA = SchemaBuilder.struct().name(TwitterStatus::class.java.name).version(1)
             .field("id", Schema.INT64_SCHEMA)
             .field("createdAt", Timestamp.builder().build())
             .field("favoriteCount", Schema.INT32_SCHEMA)

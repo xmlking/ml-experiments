@@ -1,5 +1,5 @@
 plugins {
-    id "groovy"
+    id "com.zoltu.kotlin" version "1.0.2"
     id "application"
     id "com.github.johnrengelman.shadow" version "1.2.3"
 }
@@ -8,18 +8,19 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    jcenter()
     maven {
         name "confluent"
         url 'http://packages.confluent.io/maven/'
     }
     maven {
-        name "cloudera"
-        url "https://repository.cloudera.com/artifactory/cloudera-repos/"
+        name "jebrains-all"
+        url "http://repository.jetbrains.com/all"
     }
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "de.julielab:aliasi-lingpipe:4.1.0"
     compile "org.apache.kafka:kafka-clients:$kafkaVersion"
     compile ("org.apache.kafka:kafka-streams:$kafkaVersion") {
@@ -28,7 +29,8 @@ dependencies {
     compile "io.confluent:kafka-avro-serializer:$confluentVersion"
     compile "org.apache.avro:avro:$avroVersion"
 
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
+    testCompile "org.jetbrains.spek:spek:$spekVersion"
 }
 
 mainClassName = "com.sumo.experiments.kafka.streams.twitter.TwitterStreamsAnalyzer"
