@@ -33,4 +33,4 @@ dependencies {
     testCompile "org.jetbrains.spek:spek:$spekVersion"
 }
 
-mainClassName = "com.sumo.experiments.kafka.streams.twitter.TwitterStreamsAnalyzer"
+mainClassName = "com.sumo.experiments.kafka.streams.twitter.TwitterLanguageAnalyzer"

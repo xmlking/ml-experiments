@@ -1,7 +1,7 @@
 package com.sumo.experiments.kafka.streams.twitter
 
 import com.sumo.experiments.kafka.streams.twitter.utils.GenericAvroSerde
-import com.sumo.experiments.ml.nlp.Classifier
+import com.sumo.experiments.ml.nlp.LanguageClassifier
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.streams.KafkaStreams
@@ -13,7 +13,7 @@ import org.apache.kafka.streams.processor.WallclockTimestampExtractor
 import org.slf4j.LoggerFactory
 
 
-class TwitterStreamsAnalyzer {
+class TwitterLanguageAnalyzer {
 
     private lateinit var kafkaStreams: KafkaStreams
 
@@ -23,7 +23,7 @@ class TwitterStreamsAnalyzer {
 
         val kStreamBuilder = KStreamBuilder()
 
-        val classifier = Classifier()
+        val classifier = LanguageClassifier()
         classifier.train("twitterTrainingData_clean.csv")
 
         val languageToKey = { k: GenericRecord, v: GenericRecord ->
@@ -47,7 +47,7 @@ class TwitterStreamsAnalyzer {
         filteredStreams[3].map(tweetToKeyValue).to("german")
 
         kafkaStreams = KafkaStreams(kStreamBuilder, streamsConfig)
-        log.debug("TwitterStreamsAnalyzer started")
+        log.debug("TwitterLanguageAnalyzer started")
         kafkaStreams.start()
 
     }
@@ -66,20 +66,25 @@ class TwitterStreamsAnalyzer {
 
     fun stop() {
         kafkaStreams.close()
-        log.debug("TwitterStreamsAnalyzer stopped")
+        log.debug("TwitterLanguageAnalyzer stopped")
     }
 
 
     companion object {
-        private val log = LoggerFactory.getLogger(TwitterStreamsAnalyzer::class.java)
+        private val log = LoggerFactory.getLogger(TwitterLanguageAnalyzer::class.java)
 
         @JvmStatic fun main(args: Array<String>) {
-            val streamsAnalyzer = TwitterStreamsAnalyzer()
-            streamsAnalyzer.run()
+            val tweetsAnalyzer = TwitterLanguageAnalyzer()
+
+            Runtime.getRuntime().addShutdownHook(Thread {
+                tweetsAnalyzer.stop()
+            })
+
+            tweetsAnalyzer.run()
         }
 
         val properties = mapOf(
-            StreamsConfig.APPLICATION_ID_CONFIG to "Twitter-Streams-Analysis",
+            StreamsConfig.APPLICATION_ID_CONFIG to "Twitter-Language-Analysis",
             StreamsConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
             StreamsConfig.ZOOKEEPER_CONNECT_CONFIG to "localhost:2181",
             StreamsConfig.KEY_SERDE_CLASS_CONFIG to GenericAvroSerde::class.java,

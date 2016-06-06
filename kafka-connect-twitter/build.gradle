@@ -22,13 +22,3 @@ dependencies {
     testCompile "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
     testCompile "org.jetbrains.spek:spek:$spekVersion"
 }
-
-
-jar {
-    manifest {
-        attributes(
-            "Implementation-Version": version,
-            'Build-Time': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        )
-    }
-}

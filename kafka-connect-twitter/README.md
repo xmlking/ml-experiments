@@ -16,7 +16,9 @@ gradle kafka-connect-twitter:shadowJar
 
 ### Run
 
-##### 1. Put the JAR file location into your CLASSPATH:
+##### 1. Start Zookeeper, Kafka, Schema Registry as per: [instructions](../infrastructure/kafka/)
+
+##### 2. Put the JAR file location into your CLASSPATH:
 
 ```bash
 cd kafka-connect-twitter
@@ -24,14 +26,11 @@ export CONFLUENT_HOME=/Developer/Applications/confluent-3.0.0
 export CLASSPATH=`pwd`/build/libs/kafka-connect-twitter-0.1.0-SNAPSHOT-all.jar
 ```
 
-##### 2. Start Zookeeper, Kafka, Schema Registry as per: [instructions](../infrastructure/kafka/)
-
 ##### 3. To start a Kafka Connect Source instance:
 
 *Structured output mode*
 
 ```bash
-cd kafka-connect-twitter
 $CONFLUENT_HOME/bin/connect-standalone connect-source-standalone.properties twitter-source.properties
 ```
 
@@ -40,6 +39,10 @@ $CONFLUENT_HOME/bin/connect-standalone connect-source-standalone.properties twit
 ```bash
 $CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
         --topic twitter \
+        --property print.key=true \
+        --property schema.registry.url=http://localhost:8081
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+        --topic english \
         --property print.key=true \
         --property schema.registry.url=http://localhost:8081
 $CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
@@ -52,6 +55,18 @@ $CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
         --property schema.registry.url=http://localhost:8081
 $CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
         --topic german \
+        --property print.key=true \
+        --property schema.registry.url=http://localhost:8081
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+         --topic positive \
+         --property print.key=true \
+         --property schema.registry.url=http://localhost:8081
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+        --topic negative \
+        --property print.key=true \
+        --property schema.registry.url=http://localhost:8081
+$CONFLUENT_HOME/bin/kafka-avro-console-consumer --zookeeper localhost:2181 \
+        --topic neutral \
         --property print.key=true \
         --property schema.registry.url=http://localhost:8081
 ```
